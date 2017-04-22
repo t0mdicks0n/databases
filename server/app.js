@@ -12,7 +12,7 @@ var parser = require('body-parser');
 var router = require('./routes.js');
 
 var app = express();
-app.use(cors())
+app.use(cors());
 module.exports.app = app;
 
 // Set what we are listening on.

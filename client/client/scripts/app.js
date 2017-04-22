@@ -5,7 +5,7 @@ var ROOM;
 
 $(document).ready(function (){
   app.init();
-  setInterval(app.fetch, 5000);
+  // setInterval(app.fetch, 500000);
 
   $('#roomSelect').on('change', function() {
     if (this.value === 'new room') {
@@ -63,7 +63,7 @@ app.init = function() {
       JSON.parse(data).forEach(function(element) {
         if (element.roomname === ROOM) {
           app.renderMessage(element);
-          OBJECTIDS[element.objectId] = element.objectId;
+          OBJECTIDS[element.objectId] = element.ID;
         }
         if (!(element.roomname in ALLROOMS)) {
           ALLROOMS[element.roomname] = element.roomname;
@@ -102,7 +102,7 @@ app.fetch = function() {
       JSON.parse(data).forEach(function(element) {
         if (element.roomname === ROOM && (element.objectId in OBJECTIDS) !== true) {
           app.renderMessage(element, 'fetchReverse');
-          OBJECTIDS[element.objectId] = element.objectId;
+          OBJECTIDS[element.objectId] = element.ID;
         }
         if (!(element.roomname in ALLROOMS)) {
           ALLROOMS[element.roomname] = element.roomname;
@@ -125,8 +125,8 @@ app.renderMessage = function(message, onFetch) {
   var $user = $('<div class="username"></div>');
   var $deleteButton = $('<button class="delete">Kill User</button>');
   var $msg = $('<div class="msg"></div>');
-  var $chat = $('<div class="chat"></div>');
-  $user.text(message.ID);
+  var $chat = $('<div class="chat"></div>');  
+  $user.text(message.username);
 
   if (message.username in FRIENDS) {
     $user.addClass("friend");
