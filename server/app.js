@@ -1,5 +1,6 @@
 var express = require('express');
-var db = require('./db');
+// var db = require('./db');
+var db = require('./db/index.js');
 
 // Middleware
 var morgan = require('morgan');
@@ -28,5 +29,5 @@ app.use(express.static(__dirname + '/../client'));
 if (!module.parent) {
   app.listen(app.get('port'));
   console.log('Listening on', app.get('port'));
+  console.log('Running on http://127.0.0.1:3000/classes');
 }
-
