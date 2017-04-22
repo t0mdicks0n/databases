@@ -5,7 +5,7 @@ var ROOM;
 
 $(document).ready(function (){
   app.init();
-  setInterval(app.fetch, 500);
+  setInterval(app.fetch, 5000);
 
   $('#roomSelect').on('change', function() {
     if (this.value === 'new room') {
@@ -58,7 +58,9 @@ app.init = function() {
     contentType: 'application/json',
     success: function (data) {
 
-      JSON.parse(data).results.forEach(function(element) {
+      console.log(data);
+      
+      JSON.parse(data).forEach(function(element) {
         if (element.roomname === ROOM) {
           app.renderMessage(element);
           OBJECTIDS[element.objectId] = element.objectId;
@@ -97,7 +99,7 @@ app.fetch = function() {
     contentType: 'application/json',
     success: function (data) {
       console.log(data)
-      JSON.parse(data).results.forEach(function(element) {
+      JSON.parse(data).forEach(function(element) {
         if (element.roomname === ROOM && (element.objectId in OBJECTIDS) !== true) {
           app.renderMessage(element, 'fetchReverse');
           OBJECTIDS[element.objectId] = element.objectId;
@@ -124,13 +126,13 @@ app.renderMessage = function(message, onFetch) {
   var $deleteButton = $('<button class="delete">Kill User</button>');
   var $msg = $('<div class="msg"></div>');
   var $chat = $('<div class="chat"></div>');
-  $user.text(message.username);
+  $user.text(message.ID);
 
   if (message.username in FRIENDS) {
     $user.addClass("friend");
   }
 
-  $msg.text(escapeRegExp(message.text));
+  $msg.text(escapeRegExp(message.message));
   $chat.append($user);
   $chat.append($deleteButton);
   $chat.append($msg);
@@ -160,8 +162,8 @@ app.handleSubmit = function(userMessage) {
   var user = parseQueryString(window.location.search).username;
   app.send({
     username: user,
-    text: userMessage,
-    roomname: ROOM
+    message: userMessage,
+    group: ROOM
   });
 }
 
@@ -200,7 +202,7 @@ app.deleteUserMsgs = function(name) {
       // data: {order: '-createdAt', limit: 100},
       contentType: 'application/json',
       success: function (data) {
-        data.results.forEach(function(element) {
+        data.forEach(function(element) {
           if (element.username === name || element.username === undefined) {
             messages.push(element.objectId);
           }
@@ -257,7 +259,7 @@ function deleter () {
       // data: {order: '-createdAt', limit: 1000},
       contentType: 'application/json',
       success: function (data) {
-        data.results.forEach(function(element) {
+        data.forEach(function(element) {
           messages.push(element.objectId)
         });
       },
