@@ -37,14 +37,13 @@ module.exports = {
 			var currentMessage = messageObj.message;
 
       dbConnection.query('SELECT * FROM users WHERE username = "' + username + '";', function(error, results, fields) {
+        // console.log('JALALAA', JSON.parse(JSON.stringify(results)));
         if (JSON.parse(JSON.stringify(results)).length === 0) {
           dbConnection.query('INSERT INTO users(username) VALUES ("' + username + '");', function (error, results, fields) {
             dbConnection.query('SELECT ID FROM users WHERE username =' + username + ';', function(error, res, fields) {
 
-
-              // Im here !!!!!!!!!!!!!!
-              console.log(res);
-              var userID = JSON.parse(JSON.stringify(res));
+              // console.log('!!!!!!!!!!!!!!', res);
+              // var userID = JSON.parse(JSON.stringify(res));
               dbConnection.query('INSERT INTO messages(message, user_ID) VALUES("' + currentMessage + '", 2)', function (error, results, fields) {
                 if (error) {
                   throw error;
@@ -68,7 +67,34 @@ module.exports = {
 
   users: {
     // Ditto as above.
-    get: function () {},
-    post: function () {}
+    get: function (callback) {
+      var dbConnection = mysql.createConnection({
+        host: 'localhost',
+        user: 'root',
+        password: 'plantlife',
+        database: 'chat'
+      });
+
+      dbConnection.query('SELECT username, created_at FROM users;', function(error, results, fields) {
+        callback(JSON.stringify(results));
+      });
+    },
+    post: function (messageObj, callback) {
+      // { username: 'Valjean' }
+      var dbConnection = mysql.createConnection({
+        host: 'localhost',
+        user: 'root',
+        password: 'plantlife',
+        database: 'chat'
+      });
+      var username = messageObj.username;
+
+      dbConnection.query('INSERT INTO users(username) VALUES("' + username + '")', function(error, results, fields) {
+        if (error) {
+          throw error;
+        }
+        callback(results);
+      });
+    }
   }
-};
+}

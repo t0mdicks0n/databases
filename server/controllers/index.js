@@ -28,7 +28,15 @@ module.exports = {
 
   users: {
     // Ditto as above
-    get: function (req, res) {},
-    post: function (req, res) {}
+    get: function (req, res) {
+      model.messages.get(function(result) {
+        res.send(result);
+      })
+    },
+    post: function (req, res) {
+      models.messages.post(req.body, function(result) {
+        res.sendStatus(200, 'inputted user');
+      })
+    }
   }
 };
