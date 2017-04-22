@@ -1,10 +1,11 @@
 // var db = require('../db');
 var db = require('../db/index.js');
 var mysql = require('mysql');
+var express = require('express');
 
 module.exports = {
   messages: {
-    get: function () {
+    get: function (callback) {
 
 			var dbConnection = mysql.createConnection({
 				host: 'localhost',
@@ -18,7 +19,7 @@ module.exports = {
     			throw error;
     		} else if (JSON.stringify(results).length > 0) {
     			console.log('Returning ' + JSON.stringify(results));
-    			return JSON.stringify(results);
+    			callback(JSON.stringify(results));
     		}
     	});
     }, // a function which produces all the messages
@@ -30,7 +31,14 @@ module.exports = {
 			  database: 'chat'
 			});
 
-    	dbConnection.query('INSERT INTO messages ', messageObj, function (error, results, fields) {
+			console.log((typeof messageObj), messageObj);
+			// { username: 'ttot', message: 'dwd' }
+
+			var username = messageObj.username;
+			var currentMessage = messageObj.message;
+
+    	dbConnection.query('INSERT INTO messages(message, user_ID, group_ID) VALUES("' + currentMessage + '", 3, 3)', function (error, results, fields) {
+
     		if (error) {
     			throw error;
     		}
